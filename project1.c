@@ -102,7 +102,7 @@ int main(int argc, char **argv)
 	double bursts = val;
 	double throughput = ps / bursts;
 	//printf("p: %d\n", p);
-	printf("throughput: %.2f\n", throughput);
+	//printf("throughput: %.2f\n", throughput);
 
 
 	//calculate waiting time
@@ -115,16 +115,16 @@ int main(int argc, char **argv)
 	double avgWaits = avgWait;
 	avgWaits = avgWaits / ps;
 	double turnAround = avgWaits + bursts / ps;//turn around time
-	printf("avg response time: %.2f\n", avgWaits);
+	//printf("avg response time: %.2f\n", avgWaits);
 
 
 	int voluntarySwitch = p;
-	printf("voluntary: %d\n", voluntarySwitch);
-	printf("turnaround time: %.2f\n", turnAround);
+	//printf("voluntary: %d\n", voluntarySwitch);
+	//printf("turnaround time: %.2f\n", turnAround);
 	//calculate response time
 	double avgBurst = bursts / ps;
 	double waiting = turnAround - avgBurst;
-	printf("average wait time: %.2f\n", waiting);
+	//printf("average wait time: %.2f\n", waiting);
 
 	int nonVoluntarySwitch;
 
@@ -160,8 +160,18 @@ int main(int argc, char **argv)
 	}
 
 	nonVoluntarySwitch = counter;
-	printf("non voluntary : %d\n", nonVoluntarySwitch);
+	//printf("non voluntary : %d\n", nonVoluntarySwitch);
 
 	double cpuUtilization = 100.00; //util always 100 for this instance as P = 1
+
+	printf("%d\n", voluntarySwitch);
+	printf("%d\n", nonVoluntarySwitch);
+	printf("%.2f\n", cpuUtilization);
+	printf("%.2f\n", throughput);
+	printf("%.2f\n", turnAround);
+	printf("%.2f\n", waiting);
+	printf("%.2f\n", avgWaits);
+
+
 
 }
