@@ -350,7 +350,7 @@ int main(int argc, char *argv[])
 	{
 		totalSum += total[i];
 	}
-	double responseSum = burst[0];
+	double responseSum;
 	for (int i = 1; i < dep; i++)
 	{
 		int tru = 1;
@@ -358,16 +358,18 @@ int main(int argc, char *argv[])
 		{
 			if (pid[i] == pid[k])
 			{
-				//printf("shows up before\n");
+				printf("shows up before\n");
 				tru = 0;
-				responseSum = responseSum + burst[i];
 				break;
 			}
 		}
 		if (tru == 1)
 		{
-			//printf("adding: %d\n", burst[i]);
-			responseSum = responseSum + burst[i];
+			for (int k = i - 1; k > -1; k--)
+			{
+				printf("adding %d\n", burst[k]);
+				responseSum = responseSum + burst[k];
+			}
 		}
 	}
 	responseSum = responseSum / 4;
