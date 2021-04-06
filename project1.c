@@ -8,6 +8,7 @@
 
 int main(int argc, char *argv[])
 {
+	printf("starting\n");
 	char *buf = (char *) malloc (1000000 *  sizeof(char));
 	int count = 0;
 	int index = 0;
@@ -17,11 +18,13 @@ int main(int argc, char *argv[])
 	char temp[100000];
 	char pid[100000];
 	char burst[100000];
+	printf("done starting\n");
 	if (argc > 1)
 	{
+		printf("argc is > 1\n");
 		FILE *file_handle;
 		file_handle = fopen(argv[1], "r");
-		
+		printf("allocating\n");
         	while (fgets(buf, 1, file_handle) != NULL)
         	{
                 	buf[index] = *buf;
@@ -56,12 +59,11 @@ int main(int argc, char *argv[])
                 	}
         	        count++;
 	        }
-
-
 	}
 	int n;
 	while ((n = (read(0, buf, 1))) > 0)
 	{
+		printf("done go here\n");
 		buf[index] = *buf;
 		unsigned char c = buf[index];
 		if (buf[index] == '\n'|| buf[index] == ' ')
