@@ -8,7 +8,7 @@
 
 int main(int argc, char *argv[])
 {
-	printf("starting\n");
+	//printf("starting\n");
 	char *buf = (char *) malloc (1000000 *  sizeof(char));
 	int count = 0;
 	int index = 0;
@@ -18,17 +18,19 @@ int main(int argc, char *argv[])
 	char temp[100000];
 	char pid[100000];
 	char burst[100000];
-	printf("done starting\n");
+	//unsigned char c = '0';
+	//printf("done starting\n");
 	if (argc > 1)
 	{
-		printf("argc is > 1\n");
+		//printf("argc is > 1\n");
 		FILE *file_handle;
 		file_handle = fopen(argv[1], "r");
-		printf("allocating\n");
-        	while (fgets(buf, 1, file_handle) != NULL)
-        	{
+		
+        	while (fscanf(file_handle, "%c", buf) == 1)
+        	{	
                 	buf[index] = *buf;
                 	unsigned char c = buf[index];
+			//printf("%c\n", c);
                 	if (buf[index] == '\n'|| buf[index] == ' ')
                 	{
                         	//printf("newline");
@@ -38,32 +40,34 @@ int main(int argc, char *argv[])
                 	{
                         	//printf("P is set\n");
                         	P = c - '0';
-
                 	}
                 	if (count == 1)
                 	{
-
                         	//printf("p is set\n");
                         	p = c - '0';
                 	}
                 	if (count == 2)
                 	{	
-
                         	//printf("N is set\n");
                         	N = c - '0';
                 	}
                 	if (count > 2)//start reading instructions
                 	{
+				//printf("adding to temp: ");
+				//printf("%c\n", c);
                         	temp[index] = c;
                         	index++;
                 	}
         	        count++;
 	        }
+		fclose(file_handle);
 	}
+	//printf("all done\n");
 	int n;
+	if ( argc == 1)
 	while ((n = (read(0, buf, 1))) > 0)
 	{
-		printf("done go here\n");
+		
 		buf[index] = *buf;
 		unsigned char c = buf[index];
 		if (buf[index] == '\n'|| buf[index] == ' ')
@@ -105,13 +109,14 @@ int main(int argc, char *argv[])
 	*/	
 	
 	
-	
+	//printf("starting calc\n");
 
 	int dep = 0;
 	for (int i = 0; i < index;)//allocate pid and burst times into respective arrays
 	{				//ignore priority value for now
 		pid[dep] = temp[i];
 		burst[dep] = temp[i+1];
+		//printf("%c\n", temp[i]);
 		i = i + 3;
 		dep++;
 	}
@@ -137,8 +142,8 @@ int main(int argc, char *argv[])
 	{
 		double c = arr[i];
 		val += c;
-		//printf("burst: %d\n", arr[i]);
-		//printf("val: %d\n", val);
+		//printf("burst: %f\n", arr[i]);
+		//printf("val: %f\n", val);
 	}
 
 	double ps = p;//convert to floats and divide
