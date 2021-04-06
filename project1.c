@@ -326,6 +326,7 @@ int main(int argc, char *argv[])
 	}
 
 
+
 	
 	/*
 	double sum = 0;
@@ -357,14 +358,14 @@ int main(int argc, char *argv[])
 		{
 			if (pid[i] == pid[k] && pid[k+1] != pid[k] && pid[k-1] != pid[k])
 			{
-				printf("shows up before\n");
+				//printf("shows up before\n");
 				tru = 0;
 				break;
 			}
 		}
 		if (tru == 1)
 		{
-			printf("adding: %d\n", burst[i]);
+			//printf("adding: %d\n", burst[i]);
 			responseSum += burst[i];
 		}
 	}
