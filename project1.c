@@ -97,35 +97,78 @@ int main(int argc, char *argv[])
 		int f;
 		int r;
 		int p;
+		int a;
+		int b;
 		char d;
+		char g;
+		char h;
 		char c = pretemp[i];
 		int q = isdigit(c);
 		if (q > 0)
 		{
 			int tru = 1;
+			
 			if (pretemp[i+1] != '\n' && pretemp[i+1] != ' ')
 			{
-				//printf("double digit\n");
-				f = c - '0';
-				d = pretemp[i+1];
-				r = d - '0';
-				p = f * 10 + r;
-				temparr[hold] = p;
-				hold++;
-				i++;
-				tru = 0;
+				tru = 2;
+				if (pretemp[i+1] != '\n' && pretemp[i+1] != ' ' && pretemp[i+2] != '\n' && pretemp[i+2] != ' ')
+				{
+					tru = 3;
+					if (pretemp[i+3] != '\n' && pretemp [i+3] != ' ')
+					{
+						tru = 4;
+						if (tru == 4)
+						{
+							f = c - '0';
+                                                	d = pretemp[i+1];
+                                                	r = d- '0';
+                                                	g = pretemp[i+2];
+                                                	a = g - '0';
+							h = pretemp[i+3];
+							b = h - '0';
+                                                	p = f * 1000 + r * 100 + a * 10 + b;
+                                                	temp[hold] = p;
+                                                	hold++;
+                                                	i++;
+                                                	i++;
+							i++;
+						}
+					}
+					if (tru == 3)
+					{
+						f = c - '0';
+						d = pretemp[i+1];
+						r = d- '0';
+						g = pretemp[i+2];
+						a = g - '0';
+						p = f * 100 + r * 10 + a;
+						temp[hold] = p;
+						hold++;
+						i++;
+						i++;
+					}
+
+				}
+				if (tru == 2)
+				{
+					f = c - '0';
+					d = pretemp[i+1];
+					r = d - '0';
+					p = f * 10 + r;
+					temparr[hold] = p;
+					hold++;
+					i++;
+				}
 			}
+			
+
 			if (tru == 1)
 			{
 				f = c - '0';
                         	temparr[hold] = f;
-                        	//printf("digit: %d\n", temparr[hold]);
+                        	
                         	hold++;
 			}
-			//f = c - '0';
-			//temparr[hold] = f;
-			//printf("digit: %d\n", temparr[hold]);
-			//hold++;
 		}
 	}
 
@@ -184,13 +227,6 @@ int main(int argc, char *argv[])
 	double pidarr[count];
 	for (int i = 0; i < dep; i++)
 	{
-		//for (int k = 0; k < dep; k++)
-                //{
-                //        if (pid[k] == burst[k+1])
-                //        {
-                //                i++;
-                //        }
-                //}
 		double c = pid[i];
 		pidarr[i] = c;
 	}
@@ -235,16 +271,6 @@ int main(int argc, char *argv[])
 	}
 
 
-
-	
-	/*
-	double sum = 0;
-	for (int i = 0; i < dep; i++)
-	{
-		sum += avgWait[i];
-	}
-	printf("sum: %f\n", sum);
-	*/
 
 	double avgWaits = avgWait;
 	avgWaits = avgWaits / ps;
