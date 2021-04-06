@@ -358,7 +358,7 @@ int main(int argc, char *argv[])
 		{
 			if (pid[i] == pid[k])
 			{
-				printf("shows up before\n");
+				//printf("shows up before\n");
 				tru = 0;
 				break;
 			}
@@ -367,7 +367,7 @@ int main(int argc, char *argv[])
 		{
 			for (int k = i - 1; k > -1; k--)
 			{
-				printf("adding %d\n", burst[k]);
+				//printf("adding %d\n", burst[k]);
 				responseSum = responseSum + burst[k];
 			}
 		}
