@@ -325,6 +325,7 @@ int main(int argc, char *argv[])
 		}
 	}
 
+
 	
 	/*
 	double sum = 0;
@@ -348,8 +349,29 @@ int main(int argc, char *argv[])
 	{
 		totalSum += total[i];
 	}
+	double responseSum;
+	for (int i = 1; i < dep; i++)
+	{
+		int tru = 1;
+		for (int k = i-1; k > -1; k--)
+		{
+			if (pid[i] == pid[k] && pid[k+1] != pid[k] && pid[k-1] != pid[k])
+			{
+				printf("shows up before\n");
+				tru = 0;
+				break;
+			}
+		}
+		if (tru == 1)
+		{
+			printf("adding: %d\n", burst[i]);
+			responseSum += burst[i];
+		}
+	}
+	responseSum = responseSum / 4;
+
 	totalSum = totalSum + avgWait;
-	printf("totalsum: %f\n", totalSum);
+	//printf("totalsum: %f\n", totalSum);
 
 	avgResponse = totalSum / 2 / ps;
 	double turnAround = totalSum / ps;//turn around time
@@ -408,7 +430,7 @@ int main(int argc, char *argv[])
 	printf("%.2lf\n", throughput);
 	printf("%.2lf\n", turnAround);
 	printf("%.2lf\n", avgWaits);
-	printf("%.2lf\n", avgResponse);
+	printf("%.2lf\n", responseSum);
 
 
 	return 0;
