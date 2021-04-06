@@ -17,8 +17,13 @@ int main(int argc, char **argv)
 	char temp[100000];
 	char pid[100000];
 	char burst[100000];
-	
-	while (read(0, buf, 1) > 0)
+	if (argc > 1)
+	{
+		printf("not text");
+	}
+	int n;
+	if (argc > 1)
+	while ((n = (read(0, buf, 1))) > 0)
 	{
 		buf[index] = *buf;
 		unsigned char c = buf[index];
