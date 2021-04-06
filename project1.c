@@ -11,14 +11,13 @@ int main(int argc, char **argv)
 	unsigned char *buf = (char *) malloc (1000000 *  sizeof(char));
 	int count = 0;
 	int index = 0;
-	int P; //Processes available to run instructions (always 1)
-        int p; //Number of threads (amount of processes)
-        int N; //Number of instructions (number of instruction lines)
+	double P; //Processes available to run instructions (always 1)
+        double p; //Number of threads (amount of processes)
+        double N; //Number of instructions (number of instruction lines)
 	char temp[100000];
 	char pid[100000];
 	char burst[100000];
 	
-	//if (argc > 1)
 	while (read(0, buf, 1) > 0)
 	{
 		buf[index] = *buf;
@@ -73,14 +72,14 @@ int main(int argc, char **argv)
 		dep++;
 	}
 
-	int arr[100000];
+	double arr[100000];
 	for (int i = 0; i < dep; i++)
 	{
 		char c = burst[i];
 		arr[i] = c - '0';
 	}
 
-	int pidarr[100000];
+	double pidarr[100000];
 	for (int i = 0; i < dep; i++)
 	{
 		char c = pid[i];
@@ -89,10 +88,10 @@ int main(int argc, char **argv)
 
 	
 	//calculate throughput
-	int val;//total burst time
+	double val;//total burst time
 	for (int i = 0; i < dep; i++)
 	{
-		int c = arr[i];
+		double c = arr[i];
 		val += c;
 		//printf("burst: %d\n", arr[i]);
 		//printf("val: %d\n", val);
@@ -106,10 +105,10 @@ int main(int argc, char **argv)
 
 
 	//calculate waiting time
-	int avgWait;
+	double avgWait;
 	for (int i = 0; i < dep; i++)
 	{
-		int initial = 0;
+		double initial = 0;
 		avgWait = initial + avgWait + arr[i];
 	}
 	double avgWaits = avgWait;
@@ -118,7 +117,7 @@ int main(int argc, char **argv)
 	//printf("avg response time: %.2f\n", avgWaits);
 
 
-	int voluntarySwitch = p;
+	double voluntarySwitch = p;
 	//printf("voluntary: %d\n", voluntarySwitch);
 	//printf("turnaround time: %.2f\n", turnAround);
 	//calculate response time
@@ -126,7 +125,7 @@ int main(int argc, char **argv)
 	double waiting = turnAround - avgBurst;
 	//printf("average wait time: %.2f\n", waiting);
 
-	int nonVoluntarySwitch;
+	double nonVoluntarySwitch;
 
 	int counter = 0;
 	for (int i = 0; i < dep; i++)
@@ -164,13 +163,13 @@ int main(int argc, char **argv)
 
 	double cpuUtilization = 100.00; //util always 100 for this instance as P = 1
 
-	printf("%d\n", voluntarySwitch);
-	printf("%d\n", nonVoluntarySwitch);
-	printf("%.2f\n", cpuUtilization);
-	printf("%.2f\n", throughput);
-	printf("%.2f\n", turnAround);
-	printf("%.2f\n", waiting);
-	printf("%.2f\n", avgWaits);
+	printf("%f\n", voluntarySwitch);
+	printf("%f\n", nonVoluntarySwitch);
+	printf("%.2lf\n", cpuUtilization);
+	printf("%.2lf\n", throughput);
+	printf("%.2lf\n", turnAround);
+	printf("%.2lf\n", waiting);
+	printf("%.2lf\n", avgWaits);
 
 
 
