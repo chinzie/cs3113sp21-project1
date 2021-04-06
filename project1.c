@@ -372,7 +372,7 @@ int main(int argc, char *argv[])
 			}
 		}
 	}
-	responseSum = responseSum / 4;
+	responseSum = responseSum / ps;
 
 	totalSum = totalSum + avgWait;
 	//printf("totalsum: %f\n", totalSum);
