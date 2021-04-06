@@ -172,5 +172,6 @@ int main(int argc, char **argv)
 	printf("%.2lf\n", avgWaits);
 
 
+	return 0;
 
 }
