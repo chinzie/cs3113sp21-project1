@@ -10,18 +10,16 @@
 int main(int argc, char *argv[])
 {
 	//printf("starting\n");
-	char *buf = (char *) malloc (1000000 *  sizeof(char));
+	char *buf = (char *) malloc (10000000 *  sizeof(char));
 	int count = 0;
 	int index = 0;
 	int P; //Processes available to run instructions (always 1)
         int p; //Number of threads (amount of processes)
         int N; //Number of instructions (number of instruction lines)
-	int temp[100000];
-	char pretemp[100000];
-	int pid[100000];
-	int burst[100000];
+	
 	//unsigned char c = '0';
 	//printf("done starting\n");
+	unsigned char e;
 	if (argc > 1)
 	{
 		//printf("argc is > 1\n");
@@ -30,50 +28,35 @@ int main(int argc, char *argv[])
 		
         	while (fscanf(file_handle, "%c", buf) == 1)
         	{	
-                	buf[index] = *buf;
-                	unsigned char c = buf[index];
-			//printf("%c\n", c);
-
-			pretemp[count] = c;
-
-			/*
-                	if (buf[index] == '\n'|| buf[index] == ' ')
-                	{
-                        	//printf("newline");
-                        	continue;
-                	}
-                	if (count == 0)
-                	{
-                        	//printf("P is set\n");
-                        	P = c - '0';
-                	}
-                	if (count == 1)
-                	{
-                        	//printf("p is set\n");
-                        	p = c - '0';
-                	}
-                	if (count == 2)
-                	{	
-                        	//printf("N is set\n");
-                        	N = c - '0';
-                	}
-                	if (count > 2)//start reading instructions
-                	{
-				//printf("adding to temp: ");
-				//printf("%c\n", c);
-                        	temp[index] = c;
-                        	index++;
-                	}
-			*/
+                	//buf[index] = *buf;
+                	//unsigned char c = buf[index];
+			//pretemp[count] = c;
+			buf[count] = *buf;
+			if (count == 0)
+			{
+				e = buf[count];
+			}
         	        count++;
 	        }
 		fclose(file_handle);
 	}
+	buf[0] = e;//file read seems to ignore the first element after loop so i allocate it here
+	char pretemp[count];
+	int temp[count];
+	int pid[count];
+	int burst[count];
+	for (int i = 0; i < count; i++)
+	{
+		unsigned char c = buf[i];
+		pretemp[i] = c;
+	}
+
 	
 	int n;
 	if ( argc == 1)
 	while ((n = (read(0, buf, 1))) > 0)
 	{
+		//count = 0;
 		
 		buf[index] = *buf;
 		unsigned char c = buf[index];
@@ -107,7 +90,7 @@ int main(int argc, char *argv[])
                 }
                 count++;
 	}
-	int temparr[100000];
+	int temparr[count];
 	int hold = 0;
 	for (int i = 0; i < count; i++)
 	{
@@ -145,62 +128,6 @@ int main(int argc, char *argv[])
 			//hold++;
 		}
 	}
-
-
-	/*
-	printf("now here\n");
-	int jub = 0;
-	int holder = 0;
-	for (int i = 0; i < count; i++)
-	{
-		int q;
-		holder = temparr[i];
-		q = isdigit(holder);
-		if (q > 0)
-		{
-			printf("digit\n");
-			temp[jub] = holder;
-			jub++;
-		
-		}
-		else
-		{
-			printf("no\n");
-			continue;
-		}
-		
-		if ((temparr[i] != '\n' && temparr[i] != ' ') && (temparr[i+1] == '\n' || temparr[i+1] == ' '))
-		{		
-			temp[jub] = holder;
-			jub++;
-		}
-		if ((temparr[i] != '\n' && temparr[i] != ' ') && (temparr[i+1] != '\n' &&  temparr[i+1] != ' '))
-		{
-			printf("copy\n");
-			int k = temparr[i+1];
-			holder = (holder * 10) + k;
-			printf("jub: %d\n", holder);
-			temp[jub] = holder;
-			jub++;
-			i++;
-		}
-		
-
-	}
-	*/
-	
-	for (int i = 0; i < hold; i++)
-	{
-		//printf("%d\n", temparr[i]);
-	}
-	
-
-		
-		
-		
-	
-	
-	//printf("starting calc\n");
 
 	
 	int dep = 0;
@@ -244,35 +171,17 @@ int main(int argc, char *argv[])
 					//ignore priority value for now
 		count++;
 	}
-	for (int i =0; i < dep; i++)
-	{
-		//printf("pid: %d\n", pid[i]);
-	}
-
-	/*
-	for (int i = 0; i < dep; i++)
-	{
-		if (pid[i] == pid[i+1])
-		{
-			int current = i;
-			while(pid[i] == pid[i+1])
-			{
-				burst[current] += burst[i+1];
-				i++;
-			}
-		}
-	}
-	*/		
+	
 
 	
-	double arr[100000];
+	double arr[count];
 	for (int i = 0; i < dep; i++)
 	{
 		double c = burst[i];
 		arr[i] = c;
 	}
 
-	double pidarr[100000];
+	double pidarr[count];
 	for (int i = 0; i < dep; i++)
 	{
 		//for (int k = 0; k < dep; k++)
@@ -435,7 +344,6 @@ int main(int argc, char *argv[])
 	printf("%.2lf\n", turnAround);
 	printf("%.2lf\n", avgWaits);
 	printf("%.2lf\n", responseSum);
-
 
 	return 0;
 
