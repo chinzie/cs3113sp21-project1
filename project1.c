@@ -5,6 +5,7 @@
 #include <string.h>
 #include <sys/wait.h>
 #include <stdint.h>
+#include <ctype.h>
 
 int main(int argc, char *argv[])
 {
@@ -15,9 +16,10 @@ int main(int argc, char *argv[])
 	int P; //Processes available to run instructions (always 1)
         int p; //Number of threads (amount of processes)
         int N; //Number of instructions (number of instruction lines)
-	char temp[100000];
-	char pid[100000];
-	char burst[100000];
+	int temp[100000];
+	char pretemp[100000];
+	int pid[100000];
+	int burst[100000];
 	//unsigned char c = '0';
 	//printf("done starting\n");
 	if (argc > 1)
@@ -31,6 +33,10 @@ int main(int argc, char *argv[])
                 	buf[index] = *buf;
                 	unsigned char c = buf[index];
 			//printf("%c\n", c);
+
+			pretemp[count] = c;
+
+			/*
                 	if (buf[index] == '\n'|| buf[index] == ' ')
                 	{
                         	//printf("newline");
@@ -58,11 +64,12 @@ int main(int argc, char *argv[])
                         	temp[index] = c;
                         	index++;
                 	}
+			*/
         	        count++;
 	        }
 		fclose(file_handle);
 	}
-	//printf("all done\n");
+	
 	int n;
 	if ( argc == 1)
 	while ((n = (read(0, buf, 1))) > 0)
@@ -100,40 +107,185 @@ int main(int argc, char *argv[])
                 }
                 count++;
 	}
+	int temparr[100000];
+	int hold = 0;
+	for (int i = 0; i < count; i++)
+	{
+		int f;
+		int r;
+		int p;
+		char d;
+		char c = pretemp[i];
+		int q = isdigit(c);
+		if (q > 0)
+		{
+			int tru = 1;
+			if (pretemp[i+1] != '\n' && pretemp[i+1] != ' ')
+			{
+				//printf("double digit\n");
+				f = c - '0';
+				d = pretemp[i+1];
+				r = d - '0';
+				p = f * 10 + r;
+				temparr[hold] = p;
+				hold++;
+				i++;
+				tru = 0;
+			}
+			if (tru == 1)
+			{
+				f = c - '0';
+                        	temparr[hold] = f;
+                        	//printf("digit: %d\n", temparr[hold]);
+                        	hold++;
+			}
+			//f = c - '0';
+			//temparr[hold] = f;
+			//printf("digit: %d\n", temparr[hold]);
+			//hold++;
+		}
+	}
+
 
 	/*
-	for (int i = 0; i < index; i++)
+	printf("now here\n");
+	int jub = 0;
+	int holder = 0;
+	for (int i = 0; i < count; i++)
 	{
-		printf("%c\n", temp[i]);
+		int q;
+		holder = temparr[i];
+		q = isdigit(holder);
+		if (q > 0)
+		{
+			printf("digit\n");
+			temp[jub] = holder;
+			jub++;
+		
+		}
+		else
+		{
+			printf("no\n");
+			continue;
+		}
+		
+		if ((temparr[i] != '\n' && temparr[i] != ' ') && (temparr[i+1] == '\n' || temparr[i+1] == ' '))
+		{		
+			temp[jub] = holder;
+			jub++;
+		}
+		if ((temparr[i] != '\n' && temparr[i] != ' ') && (temparr[i+1] != '\n' &&  temparr[i+1] != ' '))
+		{
+			printf("copy\n");
+			int k = temparr[i+1];
+			holder = (holder * 10) + k;
+			printf("jub: %d\n", holder);
+			temp[jub] = holder;
+			jub++;
+			i++;
+		}
+		
+
 	}
-	*/	
+	*/
+	
+	for (int i = 0; i < hold; i++)
+	{
+		//printf("%d\n", temparr[i]);
+	}
+	
+
+		
+		
+		
 	
 	
 	//printf("starting calc\n");
 
+	
 	int dep = 0;
-	for (int i = 0; i < index;)//allocate pid and burst times into respective arrays
-	{				//ignore priority value for now
-		pid[dep] = temp[i];
-		burst[dep] = temp[i+1];
-		//printf("%c\n", temp[i]);
-		i = i + 3;
-		dep++;
+	count = 0;
+	int size = index;
+	//printf("%d\n", size);
+	for (int i = 0; i < hold;)//allocate pid and burst times into respective arrays
+	{
+		int c = temparr[i];
+		if (count == 0)
+                {
+                        //printf("P is set\n");
+			
+                        P = c;
+			i++;
+
+                }
+                if (count == 1)
+                {
+
+                        //printf("p is set\n");
+                        p = c;
+			i++;
+                }
+                if (count == 2)
+                {
+
+                        //printf("N is set\n");
+                        N = c;
+			i++;
+                }
+		if (count > 2)
+		{
+			//printf(" i is: %d\n", i);
+			//printf(" temp is: %d\n", temparr[i]);
+			pid[dep] = temparr[i];
+                	burst[dep] = temparr[i+1];
+                	i = i + 3;
+                	dep++;
+		}
+					//ignore priority value for now
+		count++;
+	}
+	for (int i =0; i < dep; i++)
+	{
+		//printf("pid: %d\n", pid[i]);
 	}
 
+	/*
+	for (int i = 0; i < dep; i++)
+	{
+		if (pid[i] == pid[i+1])
+		{
+			int current = i;
+			while(pid[i] == pid[i+1])
+			{
+				burst[current] += burst[i+1];
+				i++;
+			}
+		}
+	}
+	*/		
+
+	
 	double arr[100000];
 	for (int i = 0; i < dep; i++)
 	{
-		char c = burst[i];
-		arr[i] = c - '0';
+		double c = burst[i];
+		arr[i] = c;
 	}
 
 	double pidarr[100000];
 	for (int i = 0; i < dep; i++)
 	{
-		char c = pid[i];
-		pidarr[i] = c - '0';
+		//for (int k = 0; k < dep; k++)
+                //{
+                //        if (pid[k] == burst[k+1])
+                //        {
+                //                i++;
+                //        }
+                //}
+		double c = pid[i];
+		pidarr[i] = c;
 	}
+	
 
 	
 	//calculate throughput
@@ -154,15 +306,53 @@ int main(int argc, char *argv[])
 
 
 	//calculate waiting time
-	double avgWait;
+	double avgWait;//[dep];
+	double avgResponse;
+	for (int i = 1; i < dep; i++)
+	{
+		//from current spot, look up and see if same pid occurs, if it does then stop and add up
+		int current = i;
+		for (int k = i-1; k > -1; k--)
+		{
+			if (pid[current] == pid[k])
+			{
+				//printf("breaking\n");
+				break;
+			}
+			//printf("adding\n");
+			avgWait = avgWait + burst[k];
+		
+		}
+	}
+
+	
+	/*
+	double sum = 0;
 	for (int i = 0; i < dep; i++)
 	{
-		double initial = 0;
-		avgWait = initial + avgWait + arr[i];
+		sum += avgWait[i];
 	}
+	printf("sum: %f\n", sum);
+	*/
+
 	double avgWaits = avgWait;
 	avgWaits = avgWaits / ps;
-	double turnAround = avgWaits + bursts / ps;//turn around time
+
+	double total[dep];
+	for (int i = 0; i < dep; i++)
+	{
+		total[i] = burst[i];
+	}
+	double totalSum;
+	for (int i = 0; i < dep; i++)
+	{
+		totalSum += total[i];
+	}
+	totalSum = totalSum + avgWait;
+	printf("totalsum: %f\n", totalSum);
+
+	avgResponse = totalSum / 2 / ps;
+	double turnAround = totalSum / ps;//turn around time
 	//printf("avg response time: %.2f\n", avgWaits);
 
 
@@ -217,8 +407,8 @@ int main(int argc, char *argv[])
 	printf("%.2lf\n", cpuUtilization);
 	printf("%.2lf\n", throughput);
 	printf("%.2lf\n", turnAround);
-	printf("%.2lf\n", waiting);
 	printf("%.2lf\n", avgWaits);
+	printf("%.2lf\n", avgResponse);
 
 
 	return 0;
