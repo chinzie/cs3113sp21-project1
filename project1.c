@@ -9,28 +9,23 @@
 
 int main(int argc, char *argv[])
 {
-	//printf("starting\n");
-	char *buf = (char *) malloc (10000000 *  sizeof(char));
+	char *buf = (char *) malloc (10000000 *  sizeof(char));//buffer to hold arbitrary amount of numbers
 	int count = 0;
 	int index = 0;
 	int P; //Processes available to run instructions (always 1)
         int p; //Number of threads (amount of processes)
         int N; //Number of instructions (number of instruction lines)
 	
-	//unsigned char c = '0';
-	//printf("done starting\n");
 	unsigned char e;
 	if (argc > 1)
 	{
 		//printf("argc is > 1\n");
 		FILE *file_handle;
 		file_handle = fopen(argv[1], "r");
-		
+		//if the argument is coming from file input, not stdin
+		//use fscanf one byte at a time
         	while (fscanf(file_handle, "%c", buf) == 1)
         	{	
-                	//buf[index] = *buf;
-                	//unsigned char c = buf[index];
-			//pretemp[count] = c;
 			buf[count] = *buf;
 			if (count == 0)
 			{
@@ -51,7 +46,7 @@ int main(int argc, char *argv[])
 		pretemp[i] = c;
 	}
 
-	
+	//for if input is stdin
 	int n;
 	if ( argc == 1)
 	while ((n = (read(0, buf, 1))) > 0)
@@ -90,6 +85,11 @@ int main(int argc, char *argv[])
                 }
                 count++;
 	}
+	//begin algorithm to set numbers that are larger than single digits
+	//so if a number is two digits (25) it will go into one array space instead of two
+	//same with three (125), four, ...
+	//this goes up to six digit long numbers
+	//this algorithm was made by myself (Colin Hinzie)
 	int temparr[count];
 	int hold = 0;
 	for (int i = 0; i < count; i++)
@@ -106,8 +106,8 @@ int main(int argc, char *argv[])
 		int q = isdigit(c);
 		if (q > 0)
 		{
-			int tru = 1;
-			
+			int tru = 1;//this helps me keep track of what the machine has determined how large the number is
+			//so if tru = 4 treat it as a 4 digit long number
 			if (pretemp[i+1] != '\n' && pretemp[i+1] != ' ')
 			{
 				tru = 2;
@@ -128,7 +128,7 @@ int main(int argc, char *argv[])
 								if (tru == 6)
 								{
 									//printf("six\n");
-									f = c - '0';
+									f = c - '0';// subtract a '0' from a char to convert it into an integer
                                                                 	d = pretemp[i+1];
                                                                 	r = d- '0';
                                                                 	g = pretemp[i+2];
@@ -139,19 +139,17 @@ int main(int argc, char *argv[])
                                                                 	int y = x - '0';
 									char z = pretemp[i+5];
 									int u = z - '0';
+									//multiply by 10 with respect to how large the number is
                                                                 	p = f * 100000 + r * 10000 + a * 1000 + b * 100 + y * 10 + u;
-                                                                	temparr[hold] = p;
+                                                                	temparr[hold] = p;//holds the number into one array place
                                                                 	hold++;
-                                                                	i++;
+                                                                	i++;//increment this many times to make up for read space
                                                                 	i++;
                                                                 	i++;
                                                                 	i++;
 									i++;
-									
-									
 								}
 							}
-							//printf("tru is: %d\n", tru);
 							if (tru == 5)
 							{
 								//printf("five\n");
@@ -232,12 +230,11 @@ int main(int argc, char *argv[])
 	}
 
 	
-	int dep = 0;
-	count = 0;
-	int size = index;
-	//printf("%d\n", size);
+	int dep = 0;//will be used a lot as it will be the length of the pid array and the burst array which hold the values of pid and burst time
+	count = 0;//reset count value
 	for (int i = 0; i < hold;)//allocate pid and burst times into respective arrays
 	{
+		//set the beginning values: P, p, N
 		int c = temparr[i];
 		if (count == 0)
                 {
@@ -263,8 +260,9 @@ int main(int argc, char *argv[])
                 }
 		if (count > 2)
 		{
-			//printf(" i is: %d\n", i);
-			//printf(" temp is: %d\n", temparr[i]);
+			//allocate the values into their respective arrays
+			//skips the priority value for now
+			//can be used later
 			pid[dep] = temparr[i];
                 	burst[dep] = temparr[i+1];
                 	i = i + 3;
@@ -274,7 +272,7 @@ int main(int argc, char *argv[])
 		count++;
 	}
 	
-	
+	//put the values into new arrays
 	double arr[count];
 	for (int i = 0; i < dep; i++)
 	{
@@ -297,19 +295,16 @@ int main(int argc, char *argv[])
 	{
 		double c = arr[i];
 		val += c;
-		//printf("burst: %f\n", arr[i]);
-		//printf("val: %f\n", val);
 	}
 
-	double ps = p;//convert to floats and divide
+	double ps = p;//convert to doubles and divide
 	double bursts = val;
 	double throughput = ps / bursts;
-	//printf("p: %d\n", p);
-	//printf("throughput: %.2f\n", throughput);
+	
 
 
 	//calculate waiting time
-	double avgWait;//[dep];
+	double avgWait;
 	double avgResponse;
 	for (int i = 1; i < dep; i++)
 	{
@@ -333,12 +328,12 @@ int main(int argc, char *argv[])
 	double avgWaits = avgWait;
 	avgWaits = avgWaits / ps;
 
-	double total[dep];
+	double total[dep];//create array that will hold all burst times
 	for (int i = 0; i < dep; i++)
 	{
 		total[i] = burst[i];
 	}
-	double totalSum;
+	double totalSum;//create double that will hold total amount of burst times
 	for (int i = 0; i < dep; i++)
 	{
 		totalSum += total[i];
@@ -347,46 +342,43 @@ int main(int argc, char *argv[])
 	for (int i = 1; i < dep; i++)
 	{
 		int tru = 1;
-		for (int k = i-1; k > -1; k--)
+		for (int k = i-1; k > -1; k--)//go backwards to see if it is the first instance
 		{
 			if (pid[i] == pid[k])
 			{
-				//printf("shows up before\n");
-				tru = 0;
+				tru = 0;//not the first instance
 				break;
 			}
 		}
-		if (tru == 1)
+		if (tru == 1)//the first instance so count the response time (all bursts before it)
 		{
 			for (int k = i - 1; k > -1; k--)
 			{
-				//printf("adding %d\n", burst[k]);
 				responseSum = responseSum + burst[k];
 			}
 		}
 	}
 	responseSum = responseSum / ps;
 
-	totalSum = totalSum + avgWait;
-	//printf("totalsum: %f\n", totalSum);
+	totalSum = totalSum + avgWait;//this is the sum of the total wait time plus the total burst time
+	
 
-	avgResponse = totalSum / 2 / ps;
+	avgResponse = totalSum / 2 / ps;//average response time
 	double turnAround = totalSum / ps;//turn around time
-	//printf("avg response time: %.2f\n", avgWaits);
+	
 
 
-	int voluntarySwitch = p;
-	//printf("voluntary: %d\n", voluntarySwitch);
-	//printf("turnaround time: %.2f\n", turnAround);
-	//calculate response time
-	double avgBurst = bursts / ps;
-	double waiting = turnAround - avgBurst;
-	//printf("average wait time: %.2f\n", waiting);
+	int voluntarySwitch = p;//voluntary switch amount is just p from input
+	
+	
+	//double avgBurst = bursts / ps;//average burst time
+	//double waiting = turnAround - avgBurst;//waiting time
+	
 
 	int nonVoluntarySwitch;
 
-	int counter = 0;
-	for (int i = 0; i < dep; i++)
+	int counter = 0;//holds number of involuntary context switches
+	for (int i = 0; i < dep; i++)//start to calculate involuntary context switches
 	{
 		int tru = 1;
 		int current = pidarr[i];
@@ -394,13 +386,13 @@ int main(int argc, char *argv[])
 		{
 			if (pid[k] == current)
 			{
-				tru = 0;
+				tru = 0;//has shown up so it means it will be an involuntary
 				break;
 			}
 		}
 		if (tru == 0)
 		{
-			if (current != pidarr[i-1])
+			if (current != pidarr[i-1])//is the one before it the same? if so dont count it
 			{
 				counter++;
 			}
@@ -411,11 +403,13 @@ int main(int argc, char *argv[])
 		}
 	}
 
+	//print everything
 	nonVoluntarySwitch = counter;
-	//printf("non voluntary : %d\n", nonVoluntarySwitch);
+	
 
 	double cpuUtilization = 100.00; //util always 100 for this instance as P = 1
 
+	//use .2lf to round to nearest .01 place
 	printf("%d\n", voluntarySwitch);
 	printf("%d\n", nonVoluntarySwitch);
 	printf("%.2lf\n", cpuUtilization);
