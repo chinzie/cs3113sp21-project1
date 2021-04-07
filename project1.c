@@ -274,7 +274,6 @@ int main(int argc, char *argv[])
 		count++;
 	}
 	
-
 	
 	double arr[count];
 	for (int i = 0; i < dep; i++)
@@ -389,30 +388,25 @@ int main(int argc, char *argv[])
 	int counter = 0;
 	for (int i = 0; i < dep; i++)
 	{
-		if (pidarr[i] != pidarr[i+1])
+		int tru = 1;
+		int current = pidarr[i];
+		for (int k = i -1; k > -1; k--)//check to see if it has shown up before
 		{
-			
-			//check rest of array to see if pid shows up again
-			for (int j = i+1; j < dep; j++)
+			if (pid[k] == current)
 			{
-				if (i == 0 && pidarr[i] == pidarr[j] && pidarr[i] != pidarr[j+1])
-				{
-					//printf("%d\n", pidarr[j]);
-					//printf("first\n");
-					counter++;
-				}
-				if (pidarr[i] == pidarr[j] && pidarr[i] != pidarr[j-1] && pidarr[i] != pidarr[j+1])
-				{
-					//printf("%d\n", pidarr[j]);
-					//printf("here\n");
-					counter++;
-				}
-				if (i == dep - 1 && pidarr[i] == pidarr[j] && pidarr[i] != pidarr[j-1])
-				{
-					//printf("%d\n", pidarr[j]);
-					//printf("last\n");
-					counter++;
-				}
+				tru = 0;
+				break;
+			}
+		}
+		if (tru == 0)
+		{
+			if (current != pidarr[i-1])
+			{
+				counter++;
+			}
+			else
+			{
+				continue;
 			}
 		}
 	}
