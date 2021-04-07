@@ -114,11 +114,69 @@ int main(int argc, char *argv[])
 				if (pretemp[i+1] != '\n' && pretemp[i+1] != ' ' && pretemp[i+2] != '\n' && pretemp[i+2] != ' ')
 				{
 					tru = 3;
-					if (pretemp[i+3] != '\n' && pretemp [i+3] != ' ')
+					if (pretemp[i+3] != '\n' && pretemp[i+3] != ' ')
 					{
 						tru = 4;
+						if (pretemp[i+4] != '\n' && pretemp[i+4] != ' ')
+						{
+							tru = 5;
+							
+							if (pretemp[i+5] != '\n' && pretemp[i+5] != ' ')
+							{
+								tru = 6;
+								
+								if (tru == 6)
+								{
+									//printf("six\n");
+									f = c - '0';
+                                                                	d = pretemp[i+1];
+                                                                	r = d- '0';
+                                                                	g = pretemp[i+2];
+                                                                	a = g - '0';
+                                                                	h = pretemp[i+3];
+                                                                	b = h - '0';
+                                                                	char x = pretemp[i+4];
+                                                                	int y = x - '0';
+									char z = pretemp[i+5];
+									int u = z - '0';
+                                                                	p = f * 100000 + r * 10000 + a * 1000 + b * 100 + y * 10 + u;
+                                                                	temparr[hold] = p;
+                                                                	hold++;
+                                                                	i++;
+                                                                	i++;
+                                                                	i++;
+                                                                	i++;
+									i++;
+									
+									
+								}
+							}
+							//printf("tru is: %d\n", tru);
+							if (tru == 5)
+							{
+								//printf("five\n");
+								f = c - '0';
+                                                        	d = pretemp[i+1];
+                                                        	r = d- '0';
+                                                        	g = pretemp[i+2];
+                                                        	a = g - '0';
+                                                        	h = pretemp[i+3];
+                                                        	b = h - '0';
+								char x = pretemp[i+4];
+								int y = x - '0';
+                                                        	p = f * 10000 + r * 1000 + a * 100 + b * 10 + y;
+                                                        	temparr[hold] = p;
+                                                        	hold++;
+                                                        	i++;
+								i++;
+                                                        	i++;
+                                                        	i++;
+								
+							}
+						}
 						if (tru == 4)
 						{
+							//printf("quad\n");
 							f = c - '0';
                                                 	d = pretemp[i+1];
                                                 	r = d- '0';
@@ -127,7 +185,7 @@ int main(int argc, char *argv[])
 							h = pretemp[i+3];
 							b = h - '0';
                                                 	p = f * 1000 + r * 100 + a * 10 + b;
-                                                	temp[hold] = p;
+                                                	temparr[hold] = p;
                                                 	hold++;
                                                 	i++;
                                                 	i++;
@@ -136,13 +194,14 @@ int main(int argc, char *argv[])
 					}
 					if (tru == 3)
 					{
+						//printf("triple\n");
 						f = c - '0';
 						d = pretemp[i+1];
 						r = d- '0';
 						g = pretemp[i+2];
 						a = g - '0';
 						p = f * 100 + r * 10 + a;
-						temp[hold] = p;
+						temparr[hold] = p;
 						hold++;
 						i++;
 						i++;
@@ -151,6 +210,7 @@ int main(int argc, char *argv[])
 				}
 				if (tru == 2)
 				{
+					//printf("double\n");
 					f = c - '0';
 					d = pretemp[i+1];
 					r = d - '0';
@@ -160,10 +220,9 @@ int main(int argc, char *argv[])
 					i++;
 				}
 			}
-			
-
 			if (tru == 1)
 			{
+				//printf("single\n");
 				f = c - '0';
                         	temparr[hold] = f;
                         	
